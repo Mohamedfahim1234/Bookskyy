@@ -1,0 +1,128 @@
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+
+interface AddBookModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onAdd: (book: { title: string; author: string; description: string }) => void;
+}
+
+const AddBookModal = ({ isOpen, onClose, onAdd }: AddBookModalProps) => {
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [description, setDescription] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (title.trim() && author.trim() && description.trim()) {
+      onAdd({ title, author, description });
+      setTitle('');
+      setAuthor('');
+      setDescription('');
+      onClose();
+    }
+  };
+
+  const handleClose = () => {
+    setTitle('');
+    setAuthor('');
+    setDescription('');
+    onClose();
+  };
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Overlay */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={handleClose}
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
+          />
+
+          {/* Modal */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ duration: 0.2 }}
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg z-50 p-4"
+          >
+            <div className="gradient-primary rounded-2xl p-8 shadow-elegant relative">
+              <button
+                onClick={handleClose}
+                className="absolute top-4 right-4 p-2 rounded-lg bg-black/20 hover:bg-black/30 transition-all"
+                aria-label="Close modal"
+              >
+                <X className="h-5 w-5 text-white" />
+              </button>
+
+              <h2 className="text-3xl font-bold text-white mb-6">Add New Book</h2>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <Input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="Book Name"
+                    className="w-full bg-white/10 border-b-2 border-black/30 text-white placeholder:text-black/60 rounded-lg focus:border-black/50 focus:bg-white/15 transition-all text-lg"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Input
+                    type="text"
+                    value={author}
+                    onChange={(e) => setAuthor(e.target.value)}
+                    placeholder="Author"
+                    className="w-full bg-white/10 border-b-2 border-black/30 text-white placeholder:text-black/60 rounded-lg focus:border-black/50 focus:bg-white/15 transition-all text-lg"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Description"
+                    rows={4}
+                    className="w-full bg-white/10 border-2 border-black/30 text-white placeholder:text-black/60 rounded-lg focus:border-black/50 focus:bg-white/15 transition-all text-lg resize-none"
+                    required
+                  />
+                </div>
+
+                <div className="flex gap-3 pt-2">
+                  <Button
+                    type="submit"
+                    className="flex-1 bg-black hover:bg-black/90 text-white py-6 text-lg font-medium rounded-lg transition-all hover:shadow-lg"
+                  >
+                    Add Book
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={handleClose}
+                    variant="outline"
+                    className="flex-1 bg-black/20 hover:bg-black/30 text-white border-black/30 py-6 text-lg font-medium rounded-lg transition-all"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+};
+
+export default AddBookModal;
