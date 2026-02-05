@@ -13,6 +13,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: DEBUG – show repo structure
+        run: |
+          echo "ROOT:"
+          ls -la
+          echo "BOOKSKYY:"
+          ls -la bookskyy || echo "bookskyy folder NOT FOUND"
+          echo "BACKEND:"
+          ls -la backend || echo "backend folder NOT FOUND"
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
