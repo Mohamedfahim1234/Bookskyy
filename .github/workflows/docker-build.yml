@@ -25,7 +25,7 @@ jobs:
 
       - name: Build Frontend Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${IMAGE_NAME}:frontend-${VERSION} ./bookskyy
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${IMAGE_NAME}:frontend-${VERSION} ./frontend
 
       - name: Build Backend Image
         run: |
