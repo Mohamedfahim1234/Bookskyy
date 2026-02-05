@@ -21,7 +21,7 @@ jobs:
 
       - name: Build & Push Frontend Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/booksyyy:frontend-1 ./frontend
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/booksyyy:frontend-1 ./bookskyy
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/booksyyy:frontend-1
 
       - name: Build & Push Backend Image
