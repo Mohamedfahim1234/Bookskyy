@@ -9,18 +9,13 @@ jobs:
   docker:
     runs-on: ubuntu-latest
 
+    env:
+      IMAGE_NAME: booksyyy
+      VERSION: ${{ github.run_number }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: DEBUG – show repo structure
-        run: |
-          echo "ROOT:"
-          ls -la
-          echo "BOOKSKYY:"
-          ls -la bookskyy || echo "bookskyy folder NOT FOUND"
-          echo "BACKEND:"
-          ls -la backend || echo "backend folder NOT FOUND"
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -28,12 +23,15 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build & Push Frontend Image
+      - name: Build Frontend Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/booksyyy:frontend-1 ./bookskyy
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/booksyyy:frontend-1
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${IMAGE_NAME}:frontend-${VERSION} ./bookskyy
 
-      - name: Build & Push Backend Image
+      - name: Build Backend Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/booksyyy:backend-1 ./backend
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/booksyyy:backend-1
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${IMAGE_NAME}:backend-${VERSION} ./backend
+
+      - name: Push Images to Docker Hub
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${IMAGE_NAME}:frontend-${VERSION}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${IMAGE_NAME}:backend-${VERSION}
